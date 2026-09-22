@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PraxisOne – Klick-Demo</title>
+<style>
+:root{--blau-dunkel:#1F4E79;--blau-mittel:#2E75B6;--blau-bg:#e8f0fb;--grau-bg:#f0f2f5;--grau-rand:#e0e0e0;
+--text-dunkel:#222;--text-mittel:#555;--text-hell:#888;--rot:#a32d2d;--rot-bg:#fde8e8;--gruen:#2d6a3f;
+--gruen-bg:#e6f4ea;--gelb-bg:#fff3cd;--gelb-text:#856404;--radius:8px;--radius-lg:12px;--shadow:0 2px 10px rgba(0,0,0,.08)}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--grau-bg);color:var(--text-dunkel)}
+.banner{background:var(--gelb-bg);color:var(--gelb-text);text-align:center;padding:8px;font-size:14px}
+header{background:var(--blau-dunkel);color:#fff;display:flex;align-items:center;gap:20px;padding:14px 24px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:19px;margin-right:auto}
+.brand span{color:#c9a7ff}
+nav.tabs a{color:rgba(255,255,255,.75);text-decoration:none;padding:8px 14px;border-radius:var(--radius);cursor:pointer}
+nav.tabs a.active{background:rgba(255,255,255,.18);color:#fff;font-weight:600}
+.roleswitch{display:flex;gap:6px;background:rgba(255,255,255,.1);padding:4px;border-radius:var(--radius)}
+.roleswitch button{background:transparent;border:0;color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px}
+.roleswitch button.active{background:#fff;color:var(--blau-dunkel);font-weight:700}
+.userchip{background:rgba(255,255,255,.12);padding:5px 12px;border-radius:20px;font-size:13px;display:flex;align-items:center;gap:8px}
+.badge{background:var(--blau-mittel);padding:2px 8px;border-radius:10px;font-size:11px}
+main{max-width:1100px;margin:24px auto;padding:0 16px}
+.card{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px;margin-bottom:20px}
+h1{font-size:22px;color:var(--blau-dunkel);margin:0 0 16px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:var(--blau-dunkel);color:#fff;text-align:left;padding:10px 12px}
+td{padding:10px 12px;border-bottom:1px solid var(--grau-rand)}
+tr:hover td{background:var(--blau-bg)}
+.btn{background:var(--blau-dunkel);color:#fff;border:0;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:13px;margin-right:4px}
+.btn.outline{background:#fff;color:var(--blau-dunkel);border:1px solid var(--blau-dunkel)}
+.pill{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.pill.rot{background:var(--rot-bg);color:var(--rot)}
+.pill.gruen{background:var(--gruen-bg);color:var(--gruen)}
+.pill.gelb{background:var(--gelb-bg);color:var(--gelb-text)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+label{font-size:13px;font-weight:600;color:var(--text-mittel);display:block;margin-bottom:4px}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--grau-rand);border-radius:6px;margin-bottom:14px;font-size:14px}
+.back{display:inline-block;margin-bottom:14px;color:var(--blau-mittel);text-decoration:none;cursor:pointer;font-size:14px}
+.hidden{display:none}
+.field-info{background:var(--blau-bg);border-radius:var(--radius);padding:14px 18px;display:flex;gap:24px;flex-wrap:wrap;margin-bottom:18px}
+.field-info div b{display:block;font-size:13px;color:var(--text-hell)}
+footer{text-align:center;padding:16px;color:var(--text-hell);font-size:13px}
+</style>
+</head>
+<body>
+<div class="banner">🧪 Klick-Demo ohne Login – alle Daten sind erfunden. Kein Server, keine Datenbank, keine echte Anmeldung.</div>
+<header>
+  <div class="brand">Patienten<span>Portal</span></div>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="roleswitch" id="roleswitch"></div>
+  <div class="userchip" id="userchip"></div>
+</header>
+<main><div id="app"></div></main>
+<footer>PraxisOne © 2026 · Statische Demo, kein echtes Patientensystem</footer>
+
+<script>
+const patients = [
+  {id:1,vorname:"Thomas",nachname:"Fischer",geb:"18.09.1985",alter:41,groesse:175,strasse:"Ulmer Straße",nr:"44",plz:"89081",ort:"Ulm",email:"thomas@example.com",tel:"0731 555555",
+   messungen:[{d:"04.04.2026 08:30",rr:"132/86",puls:80,kg:84.0,bmi:27.4,bef:"Mittel"},{d:"01.04.2026 08:00",rr:"130/85",puls:78,kg:83.7,bmi:27.3,bef:"Mittel"}],
+   diagnosen:["G43.9 – Migräne, nicht näher bezeichnet","N39.0 – Harnwegsinfektion, Lokalisation nicht näher bezeichnet"],tageSeit:170},
+  {id:2,vorname:"Klaus",nachname:"Schmidt",geb:"02.02.1969",alter:57,groesse:180,strasse:"Bahnhofstraße",nr:"12",plz:"89073",ort:"Ulm",email:"klaus@example.com",tel:"0731 333333",
+   messungen:[{d:"04.04.2026 08:00",rr:"150/95",puls:88,kg:91.5,bmi:27.6,bef:"Schlecht"}],diagnosen:["I10 – Essentielle (primäre) Hypertonie"],tageSeit:170},
+  {id:3,vorname:"Maria",nachname:"Weber",geb:"11.06.1990",alter:36,groesse:161,strasse:"Gartenweg",nr:"3",plz:"89075",ort:"Ulm",email:"maria@example.com",tel:"0731 444444",
+   messungen:[{d:"04.04.2026 09:00",rr:"112/72",puls:66,kg:55.3,bmi:21.1,bef:"Sehr gut"}],diagnosen:[],tageSeit:170},
+  {id:4,vorname:"Anna",nachname:"Müller",geb:"23.11.1975",alter:51,groesse:165,strasse:"Lindenallee",nr:"9",plz:"89077",ort:"Ulm",email:"anna@example.com",tel:"0731 222222",
+   messungen:[{d:"07.04.2026 08:45",rr:"122/82",puls:74,kg:68.1,bmi:25.0,bef:"Mittel"}],diagnosen:["F32.1 – Mittelgradige depressive Episode"],tageSeit:167},
+  {id:5,vorname:"Max",nachname:"Mustermann",geb:"15.03.1980",alter:46,groesse:178,strasse:"Hauptstraße",nr:"1",plz:"89073",ort:"Ulm",email:"max@example.com",tel:"0731 111111",
+   messungen:[{d:"07.04.2026 09:00",rr:"138/88",puls:82,kg:77.8,bmi:24.6,bef:"Mittel"},{d:"04.04.2026 08:15",rr:"140/90",puls:85,kg:78.0,bmi:24.6,bef:"Mittel"},{d:"01.04.2026 08:00",rr:"145/95",puls:88,kg:78.5,bmi:24.8,bef:"Schlecht"}],
+   diagnosen:["M54.5 – Kreuzschmerz","I10 – Essentielle (primäre) Hypertonie"],tageSeit:167},
+];
+const icd10=["E11.9 – Diabetes mellitus Typ 2 ohne Komplikationen","F32.1 – Mittelgradige depressive Episode","G43.9 – Migräne, nicht näher bezeichnet",
+"I10 – Essentielle (primäre) Hypertonie","J06.9 – Akute Infektion der oberen Atemwege","J45.9 – Asthma bronchiale","K29.5 – Chronische Gastritis",
+"M54.5 – Kreuzschmerz","N39.0 – Harnwegsinfektion","Z00.0 – Allgemeinuntersuchung ohne Besonderheiten"];
+const bef={"Sehr gut":"😄","Mittel":"😐","Schlecht":"😟"};
+function bmiPill(b){let c=b<18.5?"gelb":b<25?"gruen":b<30?"gelb":"rot";let l=b<18.5?"Untergewicht":b<25?"Normalgewicht":b<30?"Übergewicht":"Adipositas";return `<span class="pill ${c}">${b.toFixed(1)} – ${l}</span>`;}
+function rrClass(rr){const [s]=rr.split("/").map(Number);return s>=140?"style='color:#a32d2d;font-weight:700'":s>=130?"style='color:#856404;font-weight:700'":"";}
+
+const roles={
+  patient:{label:"Patient",user:"Max Mustermann",tabs:{dashboard:"Dashboard",messung:"Messung",verlauf:"Verlauf",profil:"Mein Profil"},default:"dashboard"},
+  fachkraft:{label:"Fachkraft",user:"lisa.klein",tabs:{uebersicht:"Übersicht",xml:"XML-Import"},default:"uebersicht"},
+  arzt:{label:"Arzt",user:"Dr. Peter Schneider",tabs:{uebersicht:"Übersicht"},default:"uebersicht"},
+};
+let state={role:"patient",tab:"dashboard",patientId:null,sub:null};
+
+function setState(p){state={...state,...p};render();}
+
+function header(){
+  document.getElementById("roleswitch").innerHTML=Object.entries(roles).map(([k,r])=>
+    `<button class="${state.role===k?'active':''}" onclick='setState({role:"${k}",tab:"${r.default}",patientId:null,sub:null})'>${r.label}</button>`).join("");
+  const r=roles[state.role];
+  document.getElementById("tabs").innerHTML=Object.entries(r.tabs).map(([k,l])=>
+    `<a class="${state.tab===k&&!state.sub?'active':''}" onclick='setState({tab:"${k}",patientId:null,sub:null})'>${l}</a>`).join("");
+  document.getElementById("userchip").innerHTML=`${r.user} <span class="badge">${r.label}</span>`;
+}
+
+function patientRow(p,cols){
+  const overdue=`<span class="pill rot">⚠ Überfällig</span><div style="color:var(--text-hell);font-size:12px">${p.tageSeit} Tage</div>`;
+  const last=p.messungen[0];
+  if(cols==="arzt") return `<tr><td><b>${p.vorname} ${p.nachname}</b></td><td>${p.alter} J.</td><td>${last.d.split(' ')[0]}<br>${overdue}</td>
+    <td ${rrClass(last.rr)}>${last.rr}</td><td>${last.puls} bpm</td><td>${last.kg.toFixed(2)} kg</td><td>${bmiPill(last.bmi)}</td>
+    <td>${bef[last.bef]} ${last.bef}</td><td><button class="btn" onclick='setState({sub:"akte",patientId:${p.id}})'>Akte</button>
+    <button class="btn outline" onclick='setState({sub:"verlauf",patientId:${p.id}})'>Verlauf</button></td></tr>`;
+  return `<tr><td><b>${p.vorname} ${p.nachname}</b></td><td>${p.messungen.length}</td><td>${last.d.split(' ')[0]}<br>${overdue}</td>
+    <td><a class="btn outline" href="mailto:${p.email}" onclick="event.preventDefault();alert('Würde mailto:${p.email} öffnen')" style="text-decoration:none;display:inline-block">✉ E-Mail</a>
+    <a class="btn outline" href="tel:${p.tel}" onclick="event.preventDefault();alert('Würde tel:${p.tel} öffnen')" style="text-decoration:none;display:inline-block">☎ ${p.tel}</a></td>
+    <td><button class="btn" onclick='setState({sub:"messung",patientId:${p.id}})'>+ Messung</button>
+    <button class="btn" onclick='setState({sub:"verlauf",patientId:${p.id}})'>Verlauf</button>
+    <button class="btn outline" onclick='setState({sub:"stammdaten",patientId:${p.id}})'>Stammdaten</button></td></tr>`;
+}
+
+function uebersicht(rolle){
+  const arztCols=rolle==="arzt";
+  return `<div class="card"><h1>Patientenübersicht</h1><table><tr>
+    <th>Name</th><th>${arztCols?"Alter":"Messungen"}</th><th>Letzter Eintrag</th>
+    ${arztCols?"<th>Blutdruck</th><th>Puls</th><th>Gewicht</th><th>BMI</th><th>Befinden</th>":"<th>Kontakt</th>"}
+    <th>Aktionen</th></tr>${patients.map(p=>patientRow(p,arztCols?"arzt":"fk")).join("")}</table></div>`;
+}
+
+function akteOderStammdaten(p,mode,rolle){
+  const back=`<a class="back" onclick='setState({sub:null})'>← Zurück zur Übersicht</a>`;
+  if(mode==="verlauf"){
+    return `${back}<div class="card"><h1>Verlauf: ${p.vorname} ${p.nachname}</h1>
+    <table><tr><th>Datum</th><th>Blutdruck</th><th>Puls</th><th>Gewicht</th><th>BMI</th><th>Befinden</th></tr>
+    ${p.messungen.map(m=>`<tr><td>${m.d}</td><td ${rrClass(m.rr)}>${m.rr}</td><td>${m.puls} bpm</td><td>${m.kg.toFixed(2)} kg</td><td>${bmiPill(m.bmi)}</td><td>${bef[m.bef]} ${m.bef}</td></tr>`).join("")}
+    </table></div>`;
+  }
+  if(mode==="stammdaten"){
+    return `${back}<div class="card"><h1>Stammdaten: ${p.vorname} ${p.nachname}</h1>
+    <div class="grid2"><div><label>Vorname</label><input value="${p.vorname}"><label>Straße</label><input value="${p.strasse}">
+    <label>PLZ</label><input value="${p.plz}"></div>
+    <div><label>Nachname</label><input value="${p.nachname}"><label>Nr.</label><input value="${p.nr}">
+    <label>Ort</label><input value="${p.ort}"></div></div>
+    <label>E-Mail</label><input value="${p.email}"><label>Telefon</label><input value="${p.tel}">
+    <button class="btn" onclick="alert('Demo: nicht gespeichert')">Stammdaten speichern</button></div>`;
+  }
+  if(mode==="messung"){
+    return `${back}<div class="card"><h1>Neue Messung – ${p.vorname} ${p.nachname}</h1>
+    <label>Datum und Uhrzeit</label><input type="datetime-local">
+    <div class="grid2"><div><label>Gewicht (kg)</label><input placeholder="z.B. 75.5"></div><div><label>Puls</label><input placeholder="z.B. 72"></div></div>
+    <div class="grid2"><div><label>Blutdruck systolisch</label><input placeholder="120"></div><div><label>diastolisch</label><input placeholder="80"></div></div>
+    <label>Befinden</label><select><option>– Bitte wählen –</option><option>Sehr gut</option><option>Mittel</option><option>Schlecht</option></select>
+    <button class="btn" onclick="alert('Demo: nicht gespeichert')">Messung speichern</button></div>`;
+  }
+  // akte (Arzt)
+  const last=p.messungen[0];
+  return `${back}<div class="card">
+  <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+  <div><h1 style="margin-bottom:4px">${p.vorname} ${p.nachname}</h1><span style="color:var(--text-hell)">${p.alter} Jahre · ${p.geb} · ${p.groesse.toFixed(1)} cm</span></div>
+  <div>📍 ${p.strasse} ${p.nr}, ${p.plz} ${p.ort} &nbsp; ✉ ${p.email} &nbsp; ☎ ${p.tel}</div></div>
+  <button class="btn" onclick='setState({sub:"messung",patientId:${p.id}})'>+ Messung</button>
+  <button class="btn outline" onclick='setState({sub:"verlauf",patientId:${p.id}})'>Verlauf</button>
+  <button class="btn outline" onclick='setState({sub:"stammdaten",patientId:${p.id}})'>Stammdaten</button></div>
+  <div class="grid2">
+  <div class="card"><h1 style="font-size:17px">🩺 Diagnosen</h1>
+  ${p.diagnosen.map(d=>`<div style="border-left:3px solid var(--blau-dunkel);background:var(--grau-bg);padding:8px 12px;margin-bottom:8px">${d}</div>`).join("")||"<p style='color:var(--text-hell)'>Keine Diagnosen</p>"}
+  <label style="margin-top:10px">Neue Diagnose hinzufügen</label>
+  <select id="icdsel"><option>– ICD-10 Code wählen –</option>${icd10.map(c=>`<option>${c}</option>`).join("")}</select>
+  <button class="btn" onclick="alert('Demo: nicht gespeichert')">Speichern</button></div>
+  <div class="card"><h1 style="font-size:17px">📊 Messungen</h1>
+  <div class="field-info"><div><b>Blutdruck</b>${last.rr}</div><div><b>Puls</b>${last.puls} bpm</div>
+  <div><b>Gewicht/BMI</b>${last.kg.toFixed(2)} kg ${bmiPill(last.bmi)}</div><div><b>Befinden</b>${bef[last.bef]} ${last.bef}</div></div>
+  <button class="btn outline" onclick='setState({sub:"verlauf",patientId:${p.id}})'>Als Verlauf ansehen →</button></div></div>`;
+}
+
+function patientDashboard(tab){
+  const p=patients.find(x=>x.id===5);
+  if(tab==="dashboard"){
+    return `<div class="card"><h1>👤 Meine Stammdaten</h1>
+    <div class="field-info"><div><b>Name</b>${p.vorname} ${p.nachname}</div><div><b>Alter</b>${p.alter} Jahre (${p.geb})</div>
+    <div><b>Adresse</b>${p.strasse} ${p.nr}, ${p.plz} ${p.ort}</div><div><b>Größe</b>${p.groesse.toFixed(1)} cm</div>
+    <div><b>E-Mail</b>${p.email}</div><div><b>Telefon</b>${p.tel}</div></div>
+    Aktueller BMI: ${bmiPill(p.messungen[0].bmi)}</div>
+    <div class="card"><h1>📊 Meine Messungen</h1><table><tr><th>Datum</th><th>Blutdruck</th><th>Puls</th><th>Gewicht</th><th>BMI</th><th>Befinden</th></tr>
+    ${p.messungen.map(m=>`<tr><td>${m.d}</td><td ${rrClass(m.rr)}>${m.rr}</td><td>${m.puls} bpm</td><td>${m.kg.toFixed(2)} kg</td><td>${bmiPill(m.bmi)}</td><td>${bef[m.bef]} ${m.bef}</td></tr>`).join("")}
+    </table></div>
+    <div class="card"><h1>🩺 Meine Diagnosen</h1>${p.diagnosen.map(d=>`<div style="border-left:3px solid var(--blau-dunkel);background:var(--grau-bg);padding:8px 12px;margin-bottom:8px">${d}</div>`).join("")}</div>`;
+  }
+  if(tab==="messung") return akteOderStammdaten(p,"messung");
+  if(tab==="verlauf") return akteOderStammdaten(p,"verlauf");
+  if(tab==="profil") return `<div class="card"><h1>✏️ Stammdaten bearbeiten</h1>
+    <p style="color:var(--text-hell);font-size:13px">NICHT ÄNDERBAR: Name und Geburtsdatum – Änderung nur durch Praxispersonal möglich.</p>
+    <div class="grid2"><div><label>Name</label><input value="${p.vorname} ${p.nachname}" disabled>
+    <label>Straße</label><input value="${p.strasse}"><label>PLZ</label><input value="${p.plz}"></div>
+    <div><label>Geburtsdatum</label><input value="${p.geb}" disabled><label>Nr.</label><input value="${p.nr}">
+    <label>Ort</label><input value="${p.ort}"></div></div>
+    <label>E-Mail</label><input value="${p.email}"><label>Telefon</label><input value="${p.tel}">
+    <button class="btn" onclick="alert('Demo: nicht gespeichert')">Speichern</button></div>`;
+}
+
+function xmlImport(){
+  return `<div class="card"><h1>Patientenstammdaten importieren (XML)</h1>
+  <button class="btn outline" onclick="alert('Demo: keine echte Vorlage')" style="float:right;margin-top:-40px">↓ Vorlage herunterladen</button>
+  <p>XML-Datei hochladen. Beide Formate werden unterstützt (Moodle-Format und eigenes Format).</p>
+  <label>XML-Datei auswählen (.xml, max. 2 MB)</label>
+  <div style="border:1px dashed var(--grau-rand);padding:16px;border-radius:6px;margin-bottom:14px">
+  <button class="btn outline" onclick="alert('Demo: kein echter Upload')">Datei auswählen</button> Keine Datei ausgewählt</div>
+  <button class="btn">Importieren starten</button>
+  <div style="background:var(--gelb-bg);color:var(--gelb-text);padding:10px 14px;border-radius:6px;margin-top:14px;font-size:14px">
+  ⚠ Importierte Patienten erhalten ein zufälliges Passwort. Bitte informieren Sie die Patienten über ihren Benutzernamen.</div></div>`;
+}
+
+function render(){
+  header();
+  const app=document.getElementById("app");
+  if(state.role==="patient"){app.innerHTML=patientDashboard(state.tab);return;}
+  if(state.sub && state.patientId){
+    const p=patients.find(x=>x.id===state.patientId);
+    app.innerHTML=akteOderStammdaten(p,state.sub,state.role);return;
+  }
+  if(state.role==="fachkraft"){app.innerHTML=state.tab==="xml"?xmlImport():uebersicht("fachkraft");return;}
+  if(state.role==="arzt"){app.innerHTML=uebersicht("arzt");return;}
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+__MACOSX/
+._*
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# IDEs / Editoren
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs & Temp
+*.log
+error_log
+*.tmp
+
+# Lokale Konfiguration / Secrets (falls Config/db.php später ausgelagert wird)
+.env
+Config/db.local.php
+
+# Composer (falls später verwendet)
+/vendor/
